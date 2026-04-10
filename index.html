@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>律师 LBTI 人格测试 | 有点智能事务所</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1D8D85;
+    --primary-light: #e8f5f4;
+    --bg: #F0F7F6;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --sub: #666666;
+    --orange: #F27B35;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  #app {
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 20px 40px;
+    animation: fadeIn 0.35s ease;
+  }
+  .screen.active { display: flex; flex-direction: column; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── LOGO ─── */
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 12px;
+    letter-spacing: 0.02em;
+  }
+  .logo-badge .bulb { font-size: 16px; }
+
+  /* ─── COVER PAGE ─── */
+  #cover {
+    padding-top: 32px;
+  }
+  .cover-logo { margin-bottom: 36px; }
+  .cover-main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .cover-title {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+  }
+  .cover-title span {
+    color: var(--primary);
+  }
+  .cover-subtitle {
+    font-size: 17px;
+    color: var(--sub);
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .meta-pill {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+  }
+
+  .cover-disclaimer {
+    font-size: 12px;
+    color: #999;
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 32px;
+    line-height: 1.6;
+    border-left: 3px solid var(--primary);
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    padding: 18px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.04em;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-outline {
+    display: block;
+    width: 100%;
+    background: transparent;
+    color: var(--primary);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px;
+    border-radius: 50px;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    margin-top: 12px;
+  }
+  .btn-outline:hover { background: var(--primary-light); }
+
+  /* ─── QUIZ PAGE ─── */
+  #quiz { padding-top: 20px; }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 5px;
+    background: #dde8e7;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 50px;
+    transition: width 0.4s ease;
+  }
+
+  .q-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .q-index {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  .q-text {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    background: var(--card);
+    border: 2px solid #eaf0ef;
+    border-radius: 14px;
+    padding: 16px 18px;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    line-height: 1.5;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    position: relative;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+  }
+  .option:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .option.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  .option.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  .option.selected.disabled {
+    opacity: 1;
+  }
+
+  /* ─── RESULT PAGE ─── */
+  #result { padding-top: 28px; }
+
+  .result-logo { margin-bottom: 24px; }
+
+  .result-intro {
+    font-size: 15px;
+    color: var(--sub);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .result-name {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .result-name .en {
+    color: var(--primary);
+  }
+  .result-name .zh {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--sub);
+    display: block;
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 24px;
+  }
+  .tag-pill {
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 50px;
+    letter-spacing: 0.02em;
+  }
+
+  .result-section {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    opacity: 0.8;
+  }
+  .section-body {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .scene-list, .tip-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .scene-list li, .tip-list li {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 22px;
+    position: relative;
+  }
+  .scene-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+  .tip-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+  }
+
+  .result-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    line-height: 1.8;
+  }
+
+  @media (min-width: 460px) {
+    body { padding: 20px; }
+    #app {
+      border-radius: 24px;
+      min-height: auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    .screen { min-height: 700px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ COVER ══════════════ -->
+  <div id="cover" class="screen active">
+    <div class="cover-logo">
+      <div class="logo-badge"><span class="bulb">💡</span>有点智能事务所</div>
+    </div>
+    <div class="cover-main">
+      <div class="cover-title">律师<br><span>LBTI</span></div>
+      <div class="cover-subtitle">MBTI 已过时，现在轮到你了</div>
+      <div class="cover-meta">
+        <span class="meta-pill">15 题</span>
+        <span class="meta-pill">14 种执业人格</span>
+        <span class="meta-pill">一测见真章</span>
+      </div>
+      <div class="cover-disclaimer">
+        本测试纯属娱乐，不构成法律意见，不构成职业评价，构成精准社死。
+      </div>
+      <button class="btn-primary" onclick="startQuiz()">开始测试</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ QUIZ ══════════════ -->
+  <div id="quiz" class="screen">
+    <div class="quiz-header">
+      <span class="q-num" id="q-num">1 / 15</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-index" id="q-index">Q01</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <div class="options-list" id="options-list"></div>
+  </div>
+
+  <!-- ══════════════ RESULT ══════════════ -->
+  <div id="result" class="screen">
+    <div class="result-logo">
+      <div class="logo-badge"><span class="bulb">💡</span>有点智能事务所</div>
+    </div>
+    <div class="result-intro">你的律师人格是——</div>
+    <div class="result-name">
+      <span class="en" id="r-en"></span>
+      <span class="zh" id="r-zh"></span>
+    </div>
+    <div class="tags-row" id="r-tags"></div>
+    <div class="result-section">
+      <div class="section-title">人格分析</div>
+      <div class="section-body" id="r-analysis"></div>
+    </div>
+    <div class="result-section">
+      <div class="section-title">常见场景</div>
+      <ul class="scene-list" id="r-scenes"></ul>
+    </div>
+    <div class="result-section">
+      <div class="section-title">友情提示</div>
+      <ul class="tip-list" id="r-tips"></ul>
+    </div>
+    <button class="btn-primary" onclick="restartQuiz()" style="margin-top:8px">再测一次</button>
+    <div class="result-footer">有点智能事务所 出品 | 仅供娱乐<br>本 AI 保留对一切异议的驳回权利</div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════
+// 人格数据库
+// ══════════════════════════════════════
+const PERSONAS = {
+  MAGIC_FEE: {
+    en: 'MAGIC_FEE',
+    zh: '律师费=保赢者',
+    tags: ['保赢幻觉', '付钱必赢', '结果外包', '律师背锅'],
+    analysis: '你以为你在卖服务，当事人以为你在卖结果，双方对这件事的理解从一开始就不在同一个宇宙。他付了钱，他就觉得自己买了个胜诉，你赢了叫正常发挥，你输了叫没尽力，离谱他妈给离谱开门，顺带把离谱他外婆也带进来了。建议你下次接案先把《律师服务合同》第三条读给他听三遍，如果对方还点头说「嗯我明白」，那他其实不明白，他只是在等你保证他赢。你这辈子在「解释律师费不等于保险费」这件事上花的时间，够再读一个法学院了。',
+    scenes: [
+      '你交完钱的那一刻，就觉得案子已经赢了一半。',
+      '律师说"有风险"，你听成了"客套话"。',
+      '败诉了第一反应是：我花那么多钱，你怎么能输？'
+    ],
+    tips: [
+      '律师费是服务费，不是保险费，分清楚。',
+      '你买的是专业判断，不是胜诉承诺。'
+    ]
+  },
+  FREE_CONSULT: {
+    en: 'FREE_CONSULT',
+    zh: '帮忙看一下受害者',
+    tags: ['免费惯犯', '就一眼党', '友情绑架', '顺便问问'],
+    analysis: '「就一眼」，「不复杂的」，「你帮我看一下」——你已经听过这三句话一万遍了，每一遍都当真，每一遍都帮了，每一遍都没收到钱。你不是律师，你是朋友圈的法律心理按摩师，全天候营业，无需预约，欢迎随时破防。你见过凌晨两点来问「这个协议能签吗」的，见过婚宴上拉着你讲产权纠纷的，见过发来32页合同说「就一眼」的纯血显眼包。我哭死，你的「就一眼」是人均两小时，你的「顺便问一句」是完整法律咨询全套服务。你不是在免费帮忙，你是在用友情充值别人的法律风险，然后自己emo。',
+    scenes: [
+      '你发来一份四十页合同，说"帮我看一下有没有问题"。',
+      '电话开口第一句是"就问你一个小问题，很快的"。',
+      '问完了还说"下次有事再找你，放心"。'
+    ],
+    tips: [
+      '"就一眼"是你说的，不是律师说的。',
+      '友情不是执照，也不是收费标准。'
+    ]
+  },
+  AFTER_SIGNED: {
+    en: 'AFTER_SIGNED',
+    zh: '签完才来者',
+    tags: ['事后诸葛', '签完才急', '亡羊补牢型', '已成定局'],
+    analysis: '合同已经签了，钱付了，对方已经开始履行了——然后他们才来找你。你翻开那份合同，第一页就看到了三个致命漏洞，每一个都是教科书级别的案例素材，随便哪一个拿出去讲课都够用。你没说「我早说过」，但你很想说。这不叫马后炮，这叫：你们为什么在签字之前宁愿相信对方的一张笑脸，也不愿意花二十分钟让律师看一眼？你现在面对的不是合同风险，你面对的是人类在金钱和信任面前的赛博迷信。你是事故现场的消防员，但火是别人点的，你只负责扑，不负责问为什么要点。',
+    scenes: [
+      '合同已经签了三个月，你发来说"帮我看看有没有问题"。',
+      '对方已经违约，你才翻出合同发现条款全是坑。',
+      '你说"当时没想到要找律师"，律师沉默三秒。'
+    ],
+    tips: [
+      '律师审合同是用来防坑的，不是用来认坑的。',
+      '"已经签了"是法律意义上最贵的四个字。'
+    ]
+  },
+  HIDDEN_FACTS: {
+    en: 'HIDDEN_FACTS',
+    zh: '隐情爱好者',
+    tags: ['开庭爆料', '隐情囤积', '最后一秒', '自以为无碍'],
+    analysis: '开庭前一天晚上十一点，你收到消息：「律师，我还有个事情之前忘说了。」你当时的心情不是惊讶，是那种「果然来了」的草台班子实感——因为这已经不是第一次了，不是第二次，也不是第三次。你的当事人们集体选择了把最重要的信息留到最关键的时刻爆出来，精准打击你的备庭成果。你现在接案子第一件事不是谈费用，是把风险告知书念完之后多问一句：「还有什么你觉得不重要但又有点想说的事情？」因为那个「不重要的」，通常是整个案子的地雷。',
+    scenes: [
+      '开庭前一天晚上十点，你发来一条"其实还有一件事"。',
+      '你觉得那个细节"应该没关系"，律师听完脸色变了。',
+      '你解释说"我以为不重要，就没说"。'
+    ],
+    tips: [
+      '什么重要什么不重要，让律师来判断。',
+      '开庭前一天的"其实"，是律师最怕的两个字。'
+    ]
+  },
+  IGNORED_LETTER: {
+    en: 'IGNORED_LETTER',
+    zh: '律师函透明人',
+    tags: ['函件透明', '对方无感', '发了白发', '律师函过家家'],
+    analysis: '你寄出去的律师函，对方收到了，签收了，然后放在桌上，泡了一杯茶，继续该干嘛干嘛。律师函在他眼里的地位约等于外卖小票，「哦，看了，没事。」你苦心起草的法律依据、措辞严肃的警告声明、精心设计的回复期限，全部归零。你已经发现了一个真理：律师函的威慑力和对方的法律意识成正比，而对方的法律意识……让我们不要继续这个话题了。建议你以后在函的最后加一行小字：「如不回复，本律师将默默起诉，然后在执行阶段发现你没有任何可执行财产。」',
+    scenes: [
+      '律师函发出去一周，对方回你一个表情包。',
+      '你问律师"他们不理怎么办"，律师说"那就起诉"。',
+      '你以为一封函能解决所有问题，现在你知道了。'
+    ],
+    tips: [
+      '律师函是警告信，不是魔法咒语。',
+      '对方敢无视，说明他们也有律师。'
+    ]
+  },
+  NO_PRECEDENT: {
+    en: 'NO_PRECEDENT',
+    zh: '判例白翻者',
+    tags: ['判例猎人', '完美失效', '参考无用', '白翻数据库'],
+    analysis: '三天，几十个判例，事实高度相似，法官当庭说：参考意义不大，本案有其特殊性。你已经哭死了，你只是没有让别人看见。你开始怀疑人生——不是你的判例找错了，是这个不成文法系统在用一种极其飘忽的方式告诉你：案例是参考，不是定论，法官是人，不是程序。你每次翻案例都在赌一件事：这次法官会不会觉得「参考意义重大」。赌了很多次，输的次数让你开始认真思考，也许花那三天去直接研究法官的思路，比找判例更有效率。不是你不努力，是系统的随机性比你的努力更随机。',
+    scenes: [
+      '你找到了一个事实几乎一模一样的胜诉判例，法官说"仅供参考"。',
+      '你把判例打印成厚厚一摞，对方律师看都没看。',
+      '你问法官为什么不采纳，法官说"本案有其特殊性"。'
+    ],
+    tips: [
+      '判例不是法条，法官有自由心证，记住这句话。',
+      '找到完美判例的那种兴奋感，省着点用。'
+    ]
+  },
+  THREE_YEARS: {
+    en: 'THREE_YEARS',
+    zh: '三年实习生',
+    tags: ['永久实习', '箱子搬运', '卷宗守卫', '年限陷阱'],
+    analysis: '你已经做了N年了，卷宗整理了几百箱，复印机的故障模式你比维修员更熟悉，律所的每一个角落你闭着眼睛都能找到。你不是实习生，你是一个被系统性低估的法律流水线工人，每天处理的杂事让你的简历看起来比实际能力单薄了三倍。你偶尔深夜翻出自己第一年写的法律意见书，发现其实写得不错，然后把它关掉，继续去准备明天的卷宗归档。别人问你做了几年了，你说了个数字，对方点头说「哦，刚起步嘛」——你笑了笑，没有解释「起步」这两个字在你这里的真实含义。',
+    scenes: [
+      '你做了三年，还在打印、装订、盖章、跑立案。',
+      '合伙人说"先把这个整理一下"，你已经听了八百遍。',
+      '你开始怀疑自己的执照是不是用来压箱底的。'
+    ],
+    tips: [
+      '时间不等于经验，搬了三年箱子不代表会打官司。',
+      '等机会是一种策略，问题是机会不会自己开门走进来。'
+    ]
+  },
+  CHEAP_LAWYER: {
+    en: 'CHEAP_LAWYER',
+    zh: '你们律师太贵了',
+    tags: ['报价受害', '三秒沉默', '太贵口头禅', '比价专家'],
+    analysis: '你报了个数字，对方沉默了三秒。这三秒你已经经历了一万遍，每一次都像一个不言而喻的审判：你的专业知识、你的时间成本、你七年法学教育加上几年的执业经历，在这三秒沉默里统一被折算成了「有点贵」。然后对方说：「就聊一下，这么贵啊。」你已经不想解释了，因为解释本身也是服务，你解释完了他还是觉得贵。你现在接受了一件事：觉得律师贵的人，和觉得医院贵的人，是同一批人——直到他们真的遇到了事。顿悟这件事，他们要用一次代价惨重的教训来完成，不是你能替他们跳过的。',
+    scenes: [
+      '你刚报完价，对方沉默三秒，然后说"这么贵"。',
+      '有人拿着网上查到的"行情"来跟你谈价格。',
+      '对方说"我朋友上次才收五千"，你礼貌微笑。'
+    ],
+    tips: [
+      '便宜律师不是不存在，只是你承担不起便宜的代价。',
+      '下次嫌贵，可以先去问一下对方律师收多少。'
+    ]
+  },
+  ZHANG_SAN: {
+    en: 'ZHANG_SAN',
+    zh: '张三传人',
+    tags: ['法外启蒙', '守法人设', '张三门徒', '知法卖法'],
+    analysis: '法外狂徒张三是你法学院三年最好的反面教材，一个虚构人物教会了你一百种违法路径和一百种辩护思路，让你成为了所有人里最守法的那个。过马路看灯，合同留备份，聊天记录从不乱删，转账能写备注就写备注，重要事情能发邮件就不打电话——你把自己活成了一本行走的法律风险规避手册。朋友说你太谨慎，你点点头，心里想：你不知道我见过的那些案子是怎么开始的，全都是「就一句话」「就一次」「当时没想那么多」。张三是案例，你是结论。',
+    scenes: [
+      '你能背出十个张三案例，却记不住一条真实法条。',
+      '你研究法外狂徒是"为了更好地守法"。',
+      '你跟律师聊案子，开口第一句是"假设有个人"。'
+    ],
+    tips: [
+      '张三是反面教材，不是操作手册。',
+      '"随便问问"和"认真问问"在法律上没有区别。'
+    ]
+  },
+  MIDNIGHT_DRAFT: {
+    en: 'MIDNIGHT_DRAFT',
+    zh: '凌晨改稿者',
+    tags: ['凌晨修炼', '第N版地狱', '当事人睡觉', '独自燃烧'],
+    analysis: '凌晨三点，你在改第七版代理词，当事人在睡觉，法官在睡觉，对方律师也在睡觉，只有你和一份文书还活着。你不觉得自己伟大，你只是有点烦——为什么事实这么清楚，还要用这么多字才能说明白？你的工作时间在任何正常行业里都叫「严重违反劳动法」，在律师行业里叫「敬业」。你眼睛里的眼袋是你对当事人最昂贵的投入，但他不知道，他明天只会看结果。你赢了，他说「还好」；你输了，他说「没尽力」。捏麻麻滴，你那份逐字修改的第七版代理词，配得上比「还好」更好的评价。',
+    scenes: [
+      '凌晨三点，你在改第七版起诉状，对方当事人手机静音。',
+      '你发出去的稿子石沉大海，第二天收到一条"能改一下吗"。',
+      '你开始觉得自己不是律师，是二十四小时文字处理机器。'
+    ],
+    tips: [
+      '凌晨的改稿动力来自责任心，但耗尽的是你自己。',
+      '当事人睡得着，是因为你在替他们醒着。'
+    ]
+  },
+  FRIEND_EXPERT: {
+    en: 'FRIEND_EXPERT',
+    zh: '万能法律朋友',
+    tags: ['万能接线', '跨界法律', '朋友圈110', '全科律师'],
+    analysis: '婚姻、继承、刑事、劳动、房产、合同、知产、公司法——你朋友问过你的问题已经覆盖了至少六个法律专业方向，他们不知道这些是不同的领域，他们只知道你懂法，所以你是万能的。你是朋友圈的法律110，24小时在线，节假日不休，出诊费为零。你已经顿悟了一件事：专业壁垒在朋友关系面前约等于没有，所有人都觉得「你就是学法律的嘛」就像问人「你不是学医的吗，我最近头疼」一样理所当然。你最近开始认真考虑要不要在微信上设置自动回复：「法律咨询请预约，朋友关系另算，两者不可叠加使用。」',
+    scenes: [
+      '你一个做合同的，被问了三个婚姻问题、两个刑事问题和一个税务问题。',
+      '朋友说"你是律师，这些你肯定懂"，然后截图发来一份劳动仲裁书。',
+      '你已经不记得上次有人问你专业内问题是什么时候了。'
+    ],
+    tips: [
+      '法律分科不是摆设，术业有专攻不是借口。',
+      '万能不是优点，是你没说"不"的结果。'
+    ]
+  },
+  CASE_CLOSED: {
+    en: 'CASE_CLOSED',
+    zh: '赢了没用者',
+    tags: ['赢了白赢', '判决废纸', '执行空洞', '胜诉贫困'],
+    analysis: '判决书下来了，你赢了，法院支持了你方的全部诉求，一分不少。然后你去查对方财产：银行账户18块，名下无房无车，公司账户空壳，实际控制人下落不明。恭喜你，你拿到了一张精装版法律废纸，裱起来挂墙上还挺好看。你已经输给了这个系统里最沉默的那一道关卡——执行。赢了官司，输给了现实；胜诉了，败给了对方的无产状态。你开始理解为什么有些老律师在接案子之前要先查对方的财产，因为官司打的不是道理，打的是能不能落袋。一份执行不到的判决书，是法律给你开的一个最冷的玩笑。',
+    scenes: [
+      '你赢了官司，对方账户余额十八块，还有三块是零钱。',
+      '法院说"申请强制执行"，你去了，发现没有可执行财产。',
+      '你把判决书裱起来，因为它只能用来裱。'
+    ],
+    tips: [
+      '诉前财产保全是用来干什么的，现在知道了吗。',
+      '判决书是权利凭证，不是提款机，别搞混了。'
+    ]
+  },
+  OBJECTION: {
+    en: 'OBJECTION',
+    zh: '异议专业户',
+    tags: ['异议体质', '饭桌法庭', '职业病晚期', '反驳本能'],
+    analysis: '有人说了一句逻辑不对的话，你脑子里已经自动开始组织反驳了，这是职业病，不是坏脾气，只是你的神经系统已经被训练成了一个实时事实核查机器。庭上叫专业，庭下叫「你怎么什么都要反驳」。饭桌上有人说了个明显的错误，你放下筷子，开口说：「我有个异议——」然后看到全桌的眼神，懂了，但还是说完了。你的朋友已经学会了在发朋友圈之前先发给你审核，因为他们知道如果有逻辑漏洞，你会比任何人都先发现，然后在评论区公开它。情绪稳定，逻辑在线，全场最不好糊弄的那个人，恭喜你，是你。',
+    scenes: [
+      '朋友随口说一句话，你已经在心里找反驳逻辑了。',
+      '饭还没吃完，你已经把对面三个人的陈述都质疑了一遍。',
+      '你说"我就是随便说说"，但语气和庭审一模一样。'
+    ],
+    tips: [
+      '不是所有对话都是庭审，学会听完再决定要不要反驳。',
+      '赢了饭桌，输了朋友，这个案子你也打赢了。'
+    ]
+  },
+  NOCLIENT: {
+    en: 'NOCLIENT',
+    zh: '空窗律师',
+    tags: ['空窗执业', '名片无用', '电话不响', '律所坐等'],
+    analysis: '律所开了，名片印了，朋友圈发了，公众号更新了，电话——没响。你把这段时间叫做「战略积累期」，你的家人叫它「还没找到工作」，你内心深处叫它「赛博漂流」。你每天看判例、写文章、研究竞争对手、优化自己的服务介绍，专业能力在肉眼可见地提升，客户在肉眼不可见地缺席。你已经想清楚了一件事：做律师不只要懂法，还要懂怎么让别人知道你懂法，而这两件事几乎是两个完全不同的技能树，你当年点的全是第一个。空窗不是失败，是你在用肉眼看不见的方式准备一场不知道什么时候开打的仗——但这句话，你自己信几成？',
+    scenes: [
+      '名片印了五百张，发出去三十张，来电显示一次都没亮过。',
+      '你把简介写得很完整，朋友圈发了，点赞的都是同行。',
+      '你开始研究营销，看完三篇文章，还是没有人打来。'
+    ],
+    tips: [
+      '等客户上门是一种策略，但前提是客户知道你在哪。',
+      '细分领域不是空窗的理由，是没出门找客户的理由。'
+    ]
+  }
+};
+
+// ══════════════════════════════════════
+// 15 道新题目
+// 每题4个选项，每个选项对应1个标签
+// ══════════════════════════════════════
+const QUESTIONS = [
+  {
+    text: '当事人落座还没喝上茶，第一句话：「律师，这案子我能赢吗？」',
+    options: [
+      { text: '「放心，我接的案子都有把握。」然后在心里自己加了把握。', tag: 'MAGIC_FEE' },
+      { text: '「需要全面评估，赢不赢取决于证据和法律适用。」同时开始在脑子里分析案情。', tag: 'NO_PRECEDENT' },
+      { text: '反问：「你有多少证据？」然后等他说完，逐一指出逻辑漏洞。', tag: 'OBJECTION' },
+      { text: '「不保证结果，但我会把能做的都做到位。」然后看到对方明显失望的脸。', tag: 'NOCLIENT' }
+    ]
+  },
+  {
+    text: '周五晚十点，朋友发来消息：「帮我看一下这个合同，就一眼」——附件32页。',
+    options: [
+      { text: '叹气，打开附件，默默划重点，一分钱没收。', tag: 'FREE_CONSULT' },
+      { text: '「这个要收费的，我发你报价单。」然后等了三天，对方没回。', tag: 'CHEAP_LAWYER' },
+      { text: '直接语音：「你知道32页合同审查要多少钱吗？来，我教你算。」', tag: 'OBJECTION' },
+      { text: '回复「好的」，然后认认真真看了两小时，改了周末计划。', tag: 'MIDNIGHT_DRAFT' }
+    ]
+  },
+  {
+    text: '开庭前12小时，当事人发来：「律师，我有个事情忘说了，要不要紧？」',
+    options: [
+      { text: '立刻回复「说吧」，然后熬到凌晨三点重新捋了一遍思路。', tag: 'MIDNIGHT_DRAFT' },
+      { text: '深呼吸，回「说」，心里已经预判到有多少概率是地雷。', tag: 'HIDDEN_FACTS' },
+      { text: '已读不回，明天见面再说，反正开庭就知道了。', tag: 'IGNORED_LETTER' },
+      { text: '回了个「？」，然后放下手机，盯着天花板开始emo。', tag: 'NOCLIENT' }
+    ]
+  },
+  {
+    text: '律师函发出，签收记录显示已收到，等了一整周，对方零回应。',
+    options: [
+      { text: '再发一封，这次加了一句「逾期不回复视为认可」。', tag: 'IGNORED_LETTER' },
+      { text: '开始调查对方财产，准备直接起诉，函只是个开场白。', tag: 'CASE_CLOSED' },
+      { text: '告诉当事人：「不回复也是一种态度，我们走程序。」平静如水。', tag: 'NO_PRECEDENT' },
+      { text: '在心里默记：又一封沉默的函，又一个装死的对方。然后更新了对人性的判断。', tag: 'ZHANG_SAN' }
+    ]
+  },
+  {
+    text: '翻了三天判例，找到一个事实几乎一模一样的胜诉案例。开庭，法官说：「参考意义不大，本案有其特殊性。」',
+    options: [
+      { text: '当庭补充陈述，试图说明判例相关性，不死心。', tag: 'OBJECTION' },
+      { text: '面无表情点头，在心里说：好，知道了，下次不找了。', tag: 'NO_PRECEDENT' },
+      { text: '记在本子上，回去研究为什么法官这么说，下次预判这个情况。', tag: 'THREE_YEARS' },
+      { text: '出了法院大门，发了条朋友圈：「某些事情哈哈哈。」然后删了。', tag: 'MIDNIGHT_DRAFT' }
+    ]
+  },
+  {
+    text: '当事人问：「我交了律师费，你能保证我赢吗？」',
+    options: [
+      { text: '微笑：「律师费是服务费，不是保险费，赢不赢是两件事。」', tag: 'CHEAP_LAWYER' },
+      { text: '「法律上不允许我保证结果，但我可以保证过程。」然后看到对方不满意。', tag: 'MAGIC_FEE' },
+      { text: '沉默一秒，把风险告知书推过去：「这里第三条，请再看一遍。」', tag: 'AFTER_SIGNED' },
+      { text: '脑子里已经在分析「如果输了怎么解释」，嘴上还是温和地回答了。', tag: 'HIDDEN_FACTS' }
+    ]
+  },
+  {
+    text: '聚餐，有人认出你是律师，问：「我老婆公司欠我小舅子的钱，能起诉吗？」',
+    options: [
+      { text: '条件反射开始分析：「得看合同怎么签的，有没有证据，金额多少……」', tag: 'FRIEND_EXPERT' },
+      { text: '说：「可以，但你得预约，不在饭桌上聊案子。」然后对方没再预约。', tag: 'CHEAP_LAWYER' },
+      { text: '端起酒杯说：「今天休息，下周约个时间。」然后转移话题。', tag: 'FREE_CONSULT' },
+      { text: '脑子里已经开始理案子，但表情保持淡定，精简说了两句，然后后悔了。', tag: 'OBJECTION' }
+    ]
+  },
+  {
+    text: '合同已经签了、生效了、对方也开始履行了。当事人这时候把合同拿来：「帮我看看有没有问题？」',
+    options: [
+      { text: '翻开合同，发现三处明显漏洞，平静地报告：「有问题，但现在能补救的不多。」', tag: 'AFTER_SIGNED' },
+      { text: '想说「你早干什么去了」，憋住了，开始找补救方案。', tag: 'MIDNIGHT_DRAFT' },
+      { text: '直接说：「签之前应该来找我的。现在说说你想要什么结果。」', tag: 'OBJECTION' },
+      { text: '心里开始发疯文学，脸上挂着职业微笑，把全部漏洞一条一条列出来。', tag: 'FRIEND_EXPERT' }
+    ]
+  },
+  {
+    text: '案子赢了，判决书下来了。你去执行——对方账户余额18块，名下无任何可执行财产。',
+    options: [
+      { text: '告诉当事人：「赢了，但执行不到，判决书收好，等对方有钱了可以再申请。」', tag: 'CASE_CLOSED' },
+      { text: '开始调查财产转移时间线，看撤销权有没有可用空间。', tag: 'OBJECTION' },
+      { text: '其实在接案时就预判过这个结果，但还是接了，现在果然应验。', tag: 'HIDDEN_FACTS' },
+      { text: '在心里叹气：赢了判决，输给了执行。法律圈最扎心的一课。', tag: 'NO_PRECEDENT' }
+    ]
+  },
+  {
+    text: '你报了个咨询价，对方沉默三秒，说：「这么贵啊，就聊一个小时……」',
+    options: [
+      { text: '解释：「这一小时背后是N年学习成本，不只是时间。」', tag: 'CHEAP_LAWYER' },
+      { text: '沉默地看着对方，等他想清楚。', tag: 'NOCLIENT' },
+      { text: '说：「贵？对面那家更贵，你可以货比三家。」', tag: 'OBJECTION' },
+      { text: '内心已经在帮他规划免费路线——有没有法援，网上有没有平台……', tag: 'FREE_CONSULT' }
+    ]
+  },
+  {
+    text: '案子打赢了，当事人最后说：「说实话，我觉得你没有完全尽力。」',
+    options: [
+      { text: '保持微笑，礼貌告别，走出去在停车场坐了十分钟。', tag: 'MIDNIGHT_DRAFT' },
+      { text: '当场把案件清单、工作时间记录和每一稿修改说明全部翻出来，一条一条给他看。', tag: 'OBJECTION' },
+      { text: '什么都没说，笑了笑，回家更新了自己的接案标准。', tag: 'NOCLIENT' },
+      { text: '平静地问「哪里觉得没尽力」，认真听完，心里已经破防了。', tag: 'AFTER_SIGNED' }
+    ]
+  },
+  {
+    text: '实习第三年，你刚写完一份还不错的法律意见书。师傅看完说：「挺好，先去把那三箱卷宗整理一下。」',
+    options: [
+      { text: '放下笔，去搬箱子，告诉自己这也是学习。', tag: 'THREE_YEARS' },
+      { text: '认真问「意见书有没有需要改进的地方」，师傅说「挺好的，去整理卷宗吧」。', tag: 'THREE_YEARS' },
+      { text: '边整理边在脑子里复盘那份意见书，觉得自己逻辑比卷宗有意义多了。', tag: 'MIDNIGHT_DRAFT' },
+      { text: '搬着箱子心里想：我是来学法律的，不是来练搬运的。嘴上没说，还是搬了。', tag: 'NOCLIENT' }
+    ]
+  },
+  {
+    text: '聚会，有人说：「你们律师就是帮坏人说话的，专门钻法律空子。」',
+    options: [
+      { text: '开始认真解释无罪推定和辩护制度，说了五分钟，对方还是觉得你在狡辩。', tag: 'OBJECTION' },
+      { text: '笑着说：「是的，下次你成了那个坏人，记得来找我。」', tag: 'ZHANG_SAN' },
+      { text: '沉默，夹了一口菜，决定不解释，人各有见。', tag: 'NOCLIENT' },
+      { text: '说：「法外狂徒张三很感谢我们这个职业。」然后继续喝酒。', tag: 'ZHANG_SAN' }
+    ]
+  },
+  {
+    text: '你写了份逻辑完整、引用充分的法律意见书。当事人看完说：「律师，能不能说人话？我看不太懂。」',
+    options: [
+      { text: '道歉，重新用白话写了一遍，字数多了一倍，专业性少了一半。', tag: 'FRIEND_EXPERT' },
+      { text: '开始当场口头解释，解释到第三段时意识到自己又说了法律术语。', tag: 'FRIEND_EXPERT' },
+      { text: '说：「没事，我给你做个摘要版，三条，每条一句话。」然后又写了半小时。', tag: 'MIDNIGHT_DRAFT' },
+      { text: '心里叹气，翻到第一页，开始逐段翻译，想：也许这才是真正的法律工作。', tag: 'OBJECTION' }
+    ]
+  },
+  {
+    text: '接了个案子，对方是家看起来还运营着的公司，当事人说「欠了快二十万」。你会第一时间做什么？',
+    options: [
+      { text: '先查一下对方的工商信息和可执行财产，再决定策略。', tag: 'CASE_CLOSED' },
+      { text: '整理证据材料，先写律师函，看对方什么反应。', tag: 'IGNORED_LETTER' },
+      { text: '翻数据库找同类型欠款纠纷的胜诉判例，先做好法律依据储备。', tag: 'NO_PRECEDENT' },
+      { text: '多问几句：合同签的什么？对方有没有过付款行为？欠款有没有书面确认？', tag: 'HIDDEN_FACTS' }
+    ]
+  }
+];
+
+// ══════════════════════════════════════
+// 状态
+// ══════════════════════════════════════
+let scores = {};
+let currentQ = 0;
+let answered = false;
+
+function initScores() {
+  scores = {};
+  Object.keys(PERSONAS).forEach(k => scores[k] = 0);
+}
+
+// ══════════════════════════════════════
+// 屏幕切换
+// ══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══════════════════════════════════════
+// 开始测试
+// ══════════════════════════════════════
+function startQuiz() {
+  initScores();
+  currentQ = 0;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+// ══════════════════════════════════════
+// 渲染题目
+// ══════════════════════════════════════
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+
+  document.getElementById('q-num').textContent = `${currentQ + 1} / ${total}`;
+  document.getElementById('q-index').textContent = `Q${String(currentQ + 1).padStart(2,'0')}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('progress-fill').style.width = `${((currentQ) / total) * 100}%`;
+
+  const list = document.getElementById('options-list');
+  list.innerHTML = '';
+  answered = false;
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt.text;
+    btn.addEventListener('click', () => selectOption(btn, opt.tag, i));
+    list.appendChild(btn);
+  });
+}
+
+// ══════════════════════════════════════
+// 选择选项
+// ══════════════════════════════════════
+function selectOption(btn, tag, idx) {
+  if (answered) return;
+  answered = true;
+
+  // 视觉反馈
+  document.querySelectorAll('.option').forEach(b => b.classList.add('disabled'));
+  btn.classList.add('selected');
+
+  // 计分
+  scores[tag] = (scores[tag] || 0) + 1;
+
+  // 300ms 后跳下一题
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ >= QUESTIONS.length) {
+      showResult();
+    } else {
+      renderQuestion();
+    }
+  }, 300);
+}
+
+// ══════════════════════════════════════
+// 计算并展示结果
+// ══════════════════════════════════════
+function showResult() {
+  // 找得分最高的标签
+  let topTag = null;
+  let topScore = -1;
+  Object.keys(scores).forEach(k => {
+    if (scores[k] > topScore) {
+      topScore = scores[k];
+      topTag = k;
+    }
+  });
+
+  const p = PERSONAS[topTag];
+
+  document.getElementById('r-en').textContent = p.en;
+  document.getElementById('r-zh').textContent = p.zh;
+
+  // 标签pills
+  const tagsEl = document.getElementById('r-tags');
+  tagsEl.innerHTML = '';
+  p.tags.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'tag-pill';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+
+  // 分析
+  document.getElementById('r-analysis').textContent = p.analysis;
+
+  // 常见场景
+  const scenesEl = document.getElementById('r-scenes');
+  scenesEl.innerHTML = '';
+  p.scenes.forEach(s => {
+    const li = document.createElement('li');
+    li.textContent = s;
+    scenesEl.appendChild(li);
+  });
+
+  // 友情提示
+  const tipsEl = document.getElementById('r-tips');
+  tipsEl.innerHTML = '';
+  p.tips.forEach(t => {
+    const li = document.createElement('li');
+    li.textContent = t;
+    tipsEl.appendChild(li);
+  });
+
+  // 进度条满
+  document.getElementById('progress-fill').style.width = '100%';
+
+  showScreen('result');
+  // 滚到顶部
+  document.getElementById('app').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════
+// 重新测试
+// ══════════════════════════════════════
+function restartQuiz() {
+  showScreen('cover');
+}
+</script>
+</body>
+</html>
