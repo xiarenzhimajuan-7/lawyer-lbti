@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>律师 LBTI 人格测试 v4 | 有点智能事务所</title>
+<title>律师 LBTI 人格测试 v5 | 有点智能事务所</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -367,6 +367,294 @@
     }
     .screen { min-height: 700px; }
   }
+
+  /* ─── GALLERY ─── */
+  #gallery {
+    padding-top: 20px;
+    padding-bottom: 60px;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #gallery.active {
+    animation: fadeInUp 0.4s ease;
+  }
+
+  .gallery-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .btn-back {
+    background: none;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .btn-back:hover { background: var(--primary-light); }
+
+  .gallery-titles { flex: 1; }
+
+  .gallery-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .gallery-subtitle {
+    font-size: 12px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .gallery-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px 12px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0;
+    animation: fadeInUp 0.35s ease forwards;
+  }
+  .gallery-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+  .gallery-card:active { transform: scale(0.97); }
+
+  .gc-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin: 0 auto 10px;
+    display: block;
+    background: var(--primary-light);
+  }
+
+  .gc-en {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    word-break: break-all;
+  }
+
+  .gc-zh {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .gc-summary {
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.5;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .modal-card {
+    background: #fff;
+    border-radius: 24px;
+    max-width: 380px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px 20px 28px;
+    position: relative;
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--bg);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sub);
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: #dde8e7; }
+
+  .modal-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 16px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 14px;
+    background: var(--primary-light);
+  }
+
+  .modal-en {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .modal-zh {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .modal-section {
+    margin-bottom: 16px;
+  }
+
+  .modal-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .modal-analysis {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .modal-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-list.scenes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 7px;
+    height: 7px;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+
+  .modal-list.tips li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 7px;
+    height: 7px;
+    background: var(--orange);
+    border-radius: 50%;
+  }
+
+  .modal-list li {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    padding-left: 18px;
+    position: relative;
+  }
+
+  .modal-cta {
+    display: block;
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 20px;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .modal-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+  .modal-cta:active { transform: scale(0.98); }
+
+  /* gallery entry button */
+  .btn-gallery {
+    display: block;
+    width: 100%;
+    background: transparent;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 15px;
+    border-radius: 50px;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    margin-top: 12px;
+  }
+  .btn-gallery:hover { background: var(--primary-light); }
 </style>
 </head>
 <body>
@@ -430,7 +718,45 @@
       <ul class="tip-list" id="r-tips"></ul>
     </div>
     <button class="btn-primary" onclick="restartQuiz()" style="margin-top:8px">再测一次</button>
+    <button class="btn-gallery" onclick="showGallery()">查看全图鉴 →</button>
     <div class="result-footer">有点智能事务所 出品 | 仅供娱乐<br>本 AI 保留对一切异议的驳回权利</div>
+  </div>
+
+  <!-- ══════════════ GALLERY ══════════════ -->
+  <div id="gallery" class="screen">
+    <div class="gallery-header">
+      <button class="btn-back" onclick="goBackFromGallery()">← 返回测试</button>
+      <div class="gallery-titles">
+        <div class="gallery-title">律师 LBTI 全图鉴</div>
+        <div class="gallery-subtitle">14种执业人格，你中了几个？</div>
+      </div>
+      <div class="logo-badge" style="font-size:12px;padding:6px 10px;"><span class="bulb">💡</span>有点智能</div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+
+  <!-- ══════════════ MODAL ══════════════ -->
+  <div id="modal-overlay" class="modal-overlay" style="display:none;" onclick="closeModalOnOverlay(event)">
+    <div class="modal-card" id="modal-card">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <img class="modal-img" id="modal-img" src="" alt="">
+      <div class="modal-en" id="modal-en"></div>
+      <div class="modal-zh" id="modal-zh"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-section">
+        <div class="modal-section-title">人格分析</div>
+        <div class="modal-analysis" id="modal-analysis"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">常见场景</div>
+        <ul class="modal-list scenes" id="modal-scenes"></ul>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">友情提示</div>
+        <ul class="modal-list tips" id="modal-tips"></ul>
+      </div>
+      <button class="modal-cta" onclick="goToQuizFromModal()">我就是这个！去测试</button>
+    </div>
   </div>
 
 </div>
@@ -1101,6 +1427,125 @@ function showResult() {
 // ══════════════════════════════════════
 function restartQuiz() {
   showScreen('cover');
+}
+
+// ══════════════════════════════════════
+// 全图鉴
+// ══════════════════════════════════════
+function showGallery() {
+  renderGalleryGrid();
+  showScreen('gallery');
+  document.getElementById('app').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function goBackFromGallery() {
+  // 如果有测试结果，返回结果页；否则返回封面
+  const hasResult = document.getElementById('r-en').textContent;
+  showScreen(hasResult ? 'result' : 'cover');
+  document.getElementById('app').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function renderGalleryGrid() {
+  const grid = document.getElementById('gallery-grid');
+  if (grid._rendered) return; // 只渲染一次
+  grid.innerHTML = '';
+  const keys = Object.keys(PERSONAS);
+  keys.forEach((key, idx) => {
+    const p = PERSONAS[key];
+    const summary = p.analysis.slice(0, 40) + (p.analysis.length > 40 ? '…' : '');
+
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.style.animationDelay = (idx * 50) + 'ms';
+    card.onclick = () => openModal(key);
+
+    const imgEl = p.image
+      ? `<img class="gc-img" src="${p.image}" alt="${p.zh}">`
+      : `<div class="gc-img" style="display:flex;align-items:center;justify-content:center;font-size:36px;">⚖️</div>`;
+
+    card.innerHTML = `
+      ${imgEl}
+      <div class="gc-en">${p.en}</div>
+      <div class="gc-zh">${p.zh}</div>
+      <div class="gc-summary">${summary}</div>
+    `;
+    grid.appendChild(card);
+  });
+  grid._rendered = true;
+}
+
+function openModal(key) {
+  const p = PERSONAS[key];
+
+  // 图片
+  const imgEl = document.getElementById('modal-img');
+  if (p.image) {
+    imgEl.src = p.image;
+    imgEl.alt = p.zh;
+    imgEl.style.display = 'block';
+  } else {
+    imgEl.style.display = 'none';
+  }
+
+  // 文字
+  document.getElementById('modal-en').textContent = p.en;
+  document.getElementById('modal-zh').textContent = p.zh;
+
+  // tags
+  const tagsEl = document.getElementById('modal-tags');
+  tagsEl.innerHTML = '';
+  p.tags.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'tag-pill';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+
+  // analysis
+  document.getElementById('modal-analysis').textContent = p.analysis;
+
+  // scenes
+  const scenesEl = document.getElementById('modal-scenes');
+  scenesEl.innerHTML = '';
+  p.scenes.forEach(s => {
+    const li = document.createElement('li');
+    li.textContent = s;
+    scenesEl.appendChild(li);
+  });
+
+  // tips
+  const tipsEl = document.getElementById('modal-tips');
+  tipsEl.innerHTML = '';
+  p.tips.forEach(t => {
+    const li = document.createElement('li');
+    li.textContent = t;
+    tipsEl.appendChild(li);
+  });
+
+  // show
+  const overlay = document.getElementById('modal-overlay');
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) {
+    closeModal();
+  }
+}
+
+function goToQuizFromModal() {
+  closeModal();
+  showScreen('cover');
+  document.getElementById('app').scrollTop = 0;
+  window.scrollTo(0, 0);
 }
 </script>
 </body>
